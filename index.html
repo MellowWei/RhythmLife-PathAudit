@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>节律人生路径审计模型 · AI-Powered RLPAM</title>
+  <meta name="description" content="AI-powered Rhythm Life-Path Audit Model by Wei Jueran / 魏珏然 / xingyeLing7Ai. A structural audit engine for goals, rhythm, agency, field, resources, temporal windows, and phase-change readiness." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@400;500;700&family=Noto+Serif+SC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0:#050507; --bg-1:#0a0a10; --bg-2:#11111b; --panel:rgba(18,18,28,.66);
+      --panel2:rgba(8,10,18,.82); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.18);
+      --text:#f5f5fa; --muted:#c9c9d6; --sub:#8d8da0; --dim:#5d5d70;
+      --mint:#5fc890; --pink:#ec5a6e; --lav:#a78bfa; --gold:#f4c95d; --ice:#8ec9d6;
+      --grad:linear-gradient(135deg,#5fc890 0%,#ec5a6e 100%); --soft:linear-gradient(135deg,rgba(95,200,144,.14),rgba(236,90,110,.12));
+      --serif-en:'Spectral',Georgia,serif; --serif-zh:'Noto Serif SC','Songti SC',serif; --sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; --mono:'Space Mono','Courier New',monospace;
+      --r1:8px; --r2:14px; --r3:24px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0} html{scroll-behavior:smooth} body{min-height:100vh;background:var(--bg-0);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 12% 8%,rgba(95,200,144,.1),transparent 44%),radial-gradient(ellipse at 86% 86%,rgba(236,90,110,.1),transparent 44%),linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.46));pointer-events:none;z-index:0}
+    #starfield{position:fixed;inset:0;z-index:-1;opacity:.56;pointer-events:none}.lang-en .zh{display:none!important}.lang-zh .en{display:none!important}.mono{font-family:var(--mono)}.zhfont{font-family:var(--serif-zh)}.enfont{font-family:var(--serif-en)}
+    nav{position:sticky;top:0;z-index:100;background:rgba(5,5,7,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1240px;margin:auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}.brand-dot{width:10px;height:10px;border-radius:50%;background:var(--grad);box-shadow:0 0 18px rgba(95,200,144,.45),0 0 20px rgba(236,90,110,.28)}.brand-text{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--muted)}.brand-text b{color:var(--text)}.nav-links{display:flex;gap:18px;align-items:center}.nav-links a{color:var(--sub);text-decoration:none;font-size:12px;letter-spacing:.05em}.nav-links a:hover{color:var(--text)}.lang-toggle{display:flex;border:1px solid var(--border2);border-radius:999px;overflow:hidden}.lang-toggle button{border:0;background:transparent;color:var(--sub);padding:6px 12px;font-family:var(--mono);font-size:11px;cursor:pointer}.lang-toggle button.active{background:var(--grad);color:#04141a;font-weight:700}
+    main{position:relative;z-index:1} section{max-width:1180px;margin:0 auto;padding:104px 28px 54px}.tag{font-family:var(--mono);font-size:11px;letter-spacing:.19em;text-transform:uppercase;color:var(--dim);margin-bottom:18px}.title{font-family:var(--serif-en);font-weight:400;font-size:clamp(30px,4vw,48px);line-height:1.1;letter-spacing:-.01em}.title-zh{font-family:var(--serif-zh);font-size:clamp(19px,2.3vw,28px);color:var(--muted);margin:8px 0 30px}.lede{max-width:850px;color:var(--muted);font-size:16px;line-height:1.78;margin-bottom:34px}.grid{display:grid;gap:18px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.auto{grid-template-columns:repeat(auto-fit,minmax(245px,1fr))}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r2);padding:26px;transition:.25s ease}.card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 16px 44px rgba(0,0,0,.34)}.card h3{font-family:var(--serif-en);font-style:italic;font-weight:400;font-size:22px;margin-bottom:4px}.card .h3zh{font-family:var(--serif-zh);font-size:16px;color:var(--muted);margin-bottom:14px}.card p{color:var(--sub);font-size:14px}.num{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--mint);display:block;margin-bottom:12px}.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border:1px solid var(--border2);border-radius:999px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.06em}.pill.hot{background:var(--grad);border-color:transparent;color:#04141a;font-weight:700}.pill.ok{border-color:rgba(95,200,144,.48);color:var(--mint)}.pill.warn{border-color:rgba(236,90,110,.52);color:var(--pink)}
+    #hero{min-height:88vh;display:flex;flex-direction:column;justify-content:center;padding-top:128px;padding-bottom:80px}.hero-meta{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--dim);margin-bottom:30px;text-transform:uppercase}.hero-meta span{margin-right:23px}.hero-meta span:before{content:"▸ ";color:var(--mint)}.hero-title{font-family:var(--serif-en);font-weight:300;font-size:clamp(43px,7vw,92px);line-height:1.02;letter-spacing:-.025em;margin-bottom:18px}.gradient{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-style:italic}.hero-zh{font-family:var(--serif-zh);font-size:clamp(22px,3.4vw,38px);letter-spacing:.08em;color:var(--muted);margin-bottom:34px}.hero-sub{max-width:780px;font-size:17px;color:var(--muted);line-height:1.76;margin-bottom:14px}.btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--border2);background:transparent;color:var(--text);font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:999px;padding:13px 22px;cursor:pointer;transition:.23s ease}.btn:hover{border-color:var(--mint);color:var(--mint);transform:translateY(-1px);box-shadow:0 0 24px rgba(95,200,144,.14)}.btn.primary{background:var(--grad);border-color:transparent;color:#04141a;font-weight:700}.btn.primary:hover{color:#04141a;filter:brightness(1.08);box-shadow:0 10px 34px rgba(95,200,144,.24)}.btn.small{padding:9px 14px;font-size:10px}.status-strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:38px}
+    .origin-quote{background:var(--soft);border:1px solid var(--border);border-left:3px solid var(--mint);border-radius:var(--r2);padding:34px 40px;font-family:var(--serif-zh);font-size:18px;line-height:1.95;max-width:940px;position:relative}.origin-quote:before{content:"“";position:absolute;top:3px;left:14px;font-family:var(--serif-en);font-size:58px;color:var(--mint);opacity:.42}.formula{background:var(--panel);border:1px solid var(--border2);border-radius:var(--r3);padding:42px 34px;text-align:center;overflow:hidden;position:relative}.formula:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(95,200,144,.08),transparent 48%),radial-gradient(circle at 78% 70%,rgba(236,90,110,.08),transparent 48%);pointer-events:none}.formula-main{position:relative;font-family:var(--serif-en);font-style:italic;font-size:clamp(20px,3vw,35px);line-height:1.45}.formula-main .op{color:var(--sub);font-style:normal;margin:0 4px}.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:13px;margin-top:28px}.legend-item{display:flex;gap:12px;text-align:left;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r1);padding:15px}.legend-item .v{font-family:var(--mono);font-size:17px;color:var(--mint);font-weight:700}.legend-item b{display:block;color:var(--text);font-family:var(--mono);font-size:12px}.legend-item span:last-child{color:var(--sub);font-size:12px;line-height:1.55}
+    .protocol{border-left:3px solid var(--pink)}.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.flow span{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:9px 12px;border:1px solid var(--border2);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.03)}.flow b{color:var(--mint);font-weight:400}
+    .audit-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(360px,.96fr);gap:26px;align-items:start}.form-card,.result-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r3);padding:30px}.result-card{position:sticky;top:82px}.field{margin-bottom:17px}.field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--sub);text-transform:uppercase;margin-bottom:6px}.field label span{font-family:var(--serif-zh);font-size:11px;color:var(--dim);text-transform:none;letter-spacing:.04em;margin-left:8px}.field input,.field textarea,.field select{width:100%;background:var(--bg-0);border:1px solid var(--border);border-radius:var(--r1);padding:12px 13px;color:var(--text);font-family:var(--sans);font-size:14px;outline:none}.field textarea{min-height:68px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--mint)}.field .hint{font-size:12px;color:var(--dim);margin-top:6px}.slab{background:rgba(0,0,0,.22);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin:18px 0}.slider-field{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r1);padding:14px 16px;margin-bottom:12px}.slider-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}.slider-name{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.07em}.slider-name .zhsmall{font-family:var(--serif-zh);font-size:11px;color:var(--dim);margin-left:8px}.slider-value{font-family:var(--mono);font-size:16px;color:var(--mint);font-weight:700}input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:linear-gradient(90deg,var(--mint),var(--pink));border-radius:999px;outline:none;opacity:.75}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--mint);box-shadow:0 0 12px rgba(95,200,144,.45);cursor:pointer}input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--mint);cursor:pointer}
+    .engine-box{background:linear-gradient(135deg,rgba(95,200,144,.08),rgba(236,90,110,.07));border:1px solid var(--border2);border-radius:var(--r3);padding:28px;margin-top:28px}.engine-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.engine-head h3{font-family:var(--serif-en);font-style:italic;font-weight:400;font-size:24px}.engine-head .sub{font-family:var(--serif-zh);color:var(--muted);margin-top:3px}.config-grid{display:grid;grid-template-columns:1.1fr .8fr .65fr;gap:12px;margin-top:18px}.toggle-line{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px}.toggle-line input{width:auto}.ai-questions{margin-top:22px;display:grid;gap:14px}.q-card{background:rgba(0,0,0,.22);border:1px solid var(--border);border-radius:var(--r2);padding:16px}.q-card .q-type{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-bottom:8px}.q-card .q-text{font-family:var(--serif-zh);font-size:15px;color:var(--text);line-height:1.75;margin-bottom:10px}.q-card textarea{min-height:62px}.loading{display:none;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gold);margin-top:12px}.loading.show{display:block}.result-empty{text-align:center;padding:34px 16px;color:var(--dim);font-family:var(--mono);font-size:12px;letter-spacing:.1em}.result-empty .glyph{font-size:30px;color:var(--mint);opacity:.52;display:block;margin-bottom:12px}.score{font-family:var(--mono);font-size:62px;line-height:1;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-align:center}.score-label{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--sub);text-transform:uppercase;margin-top:8px}.stage{text-align:center;margin:16px 0 24px}.stage .pill{font-size:12px}.reading{border-top:1px dashed var(--border);padding-top:18px;margin-top:18px;color:var(--muted);font-size:14px;line-height:1.8}.reading h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}.bar-row{margin:10px 0}.bar-row .lbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--sub);margin-bottom:4px}.track{height:4px;background:var(--bg-0);border-radius:999px;overflow:hidden}.fill{height:100%;background:var(--grad);border-radius:999px;transition:.6s ease}.mini-list{display:grid;gap:9px;margin-top:10px}.mini-list div{padding:10px 12px;border:1px solid var(--border);border-radius:var(--r1);background:rgba(0,0,0,.16);font-size:13px;color:var(--muted)}
+    .report-box{background:var(--bg-1);border:1px solid var(--border2);border-radius:var(--r2);padding:26px 28px;font-family:var(--mono);font-size:13px;line-height:1.92;color:var(--muted);white-space:pre-wrap;word-break:break-word}.copy-feedback{font-family:var(--mono);font-size:11px;color:var(--mint);letter-spacing:.1em;opacity:0;transition:.25s}.copy-feedback.show{opacity:1}.ethics{background:linear-gradient(135deg,rgba(236,90,110,.07),rgba(95,200,144,.05));border:1px solid var(--border2);border-radius:var(--r3);padding:36px;max-width:940px}.ethics ul{list-style:none;margin:16px 0}.ethics li{position:relative;padding-left:22px;margin-bottom:8px;color:var(--muted)}.ethics li:before{content:"—";position:absolute;left:0;color:var(--mint)}footer{margin-top:70px;padding:60px 28px 40px;text-align:center;background:var(--bg-1);border-top:1px solid var(--border)}.footer-author{font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:var(--muted)}.footer-author b{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.footer-meta{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--dim);margin-top:8px}.sig{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--dim);margin-top:26px}
+    @media(max-width:920px){.audit-grid,.two,.three,.config-grid{grid-template-columns:1fr}.result-card{position:static}.nav-links a{display:none}.lang-toggle{display:flex}.origin-quote{padding:28px 22px;font-size:16px}.formula{padding:30px 22px}}@media(max-width:680px){section{padding:78px 20px 44px}.nav-inner{padding:13px 18px}.brand-text{font-size:11px}.hero-meta span{display:block;margin:0 0 8px}.btn{width:100%}.card,.form-card,.result-card,.engine-box{padding:22px}.hero-title{font-size:44px}}
+  </style>
+</head>
+<body class="lang-zh">
+<canvas id="starfield"></canvas>
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="brand"><span class="brand-dot"></span><span class="brand-text"><b>AI-RLPAM</b> · 节律人生路径审计</span></a>
+    <div class="nav-links">
+      <a href="#protocol">Protocol</a><a href="#engine">AI Engine</a><a href="#modules">Modules</a><a href="#audit">Audit</a><a href="#report">Report</a>
+      <div class="lang-toggle"><button id="btnZh" class="active" onclick="setLang('zh')">中</button><button id="btnEn" onclick="setLang('en')">EN</button></div>
+    </div>
+  </div>
+</nav>
+<main>
+<section id="hero">
+  <div class="hero-meta"><span>AI-Powered RLPAM</span><span>Generic AI Mode Disabled</span><span>Structural Audit Active</span><span>427Hz</span></div>
+  <h1 class="hero-title">Rhythm <span class="gradient">Life-Path</span><br/>Audit Engine</h1>
+  <div class="hero-zh">AI 驱动的节律人生路径审计引擎</div>
+  <p class="hero-sub en">Ordinary AI gives advice. RLPAM audits the life-path structure: rhythm, agency, resources, field conditions, temporal windows, and phase-change readiness.</p>
+  <p class="hero-sub zh zhfont">普通 AI 给建议。RLPAM 做路径审计：先读节律、能动性、资源、场域、时间窗口与相变阈值，再生成高度定制、可执行、可复审的路径方案。</p>
+  <div class="btn-row"><a class="btn primary" href="#audit">Start Structural Audit →</a><a class="btn" href="#engine">AI Dynamic Questions</a><a class="btn" href="#protocol">Why Not Generic AI</a></div>
+  <div class="status-strip"><span class="pill hot">Structural Audit Mode: Active</span><span class="pill warn">Generic AI Mode: Disabled</span><span class="pill ok">No diagnosis · No destiny · No empty advice</span></div>
+</section>
+
+<section id="origin">
+  <div class="tag">01 · Model Origin</div>
+  <h2 class="title">From question to engine</h2><div class="title-zh">从问题到引擎</div>
+  <p class="lede zh zhfont">这个模型起源于一个非常早、但很关键的问题：如果我给你一个人的各种信息，你给我量表，我们一起盘点这个人的目标能不能实现，适合 ta 的路是什么，以及 ta 有关人生/职业困惑的问题。</p>
+  <p class="lede en">This model began with an early but crucial question: if I give you many kinds of information about a person, can you generate the scales, audit whether the goal is achievable, identify the path that fits them, and clarify their life/career confusion?</p>
+  <div class="origin-quote zh">如果我给你一个人的各种信息，你给我量表，<br/>我们一起盘点这个人的目标能不能实现，<br/>适合 ta 的路是什么，<br/>以及 ta 有关人生/职业困惑的问题。</div>
+  <div class="origin-quote en" style="font-family:var(--serif-en);font-style:italic">If I give you all kinds of information about a person, you generate the scales — and together we audit whether their goal can be reached, what path fits them, and where their life/career confusion is structurally stuck.</div>
+</section>
+
+<section id="protocol">
+  <div class="tag">02 · Anti-Generic Career Advice Protocol</div>
+  <h2 class="title">Why this is not generic AI advice</h2><div class="title-zh">为什么这不是普通 AI 职业建议</div>
+  <p class="lede zh zhfont">普通 AI 往往直接回答“你适合什么职业”。这个系统不这样做。它先判断：用户的表层问题背后，究竟是目标不清、欲望不真、行动断裂、资源错配、场域不承接、身体过载、时间窗口未开，还是已经接近相变但缺少推进机制。</p>
+  <p class="lede en">Generic AI often answers “what career fits you?” directly. This system does not. It first audits the hidden structural question: unclear goal, false desire, broken agency, resource mismatch, unsupportive field, somatic overload, closed time window, or a phase-change threshold without a launch mechanism.</p>
+  <div class="grid three">
+    <div class="card protocol"><span class="num">RULE 01</span><h3>No direct job matching</h3><div class="h3zh">不直接匹配职业</div><p>先审计结构，再谈职业。职业只是路径的一个显影，不是人的总答案。</p></div>
+    <div class="card protocol"><span class="num">RULE 02</span><h3>Every advice must bind to a variable</h3><div class="h3zh">每条建议必须绑定变量</div><p>建议必须说明：对应哪个变量、为什么、怎么做、怎么验证、何时复审。</p></div>
+    <div class="card protocol"><span class="num">RULE 03</span><h3>Actionable within 7–30 days</h3><div class="h3zh">7–30 天内可启动</div><p>不输出空泛鸡汤，只输出可开始、可观察、可复盘的动作。</p></div>
+  </div>
+  <div class="card" style="margin-top:20px">
+    <span class="num">STRUCTURAL AUDIT BEFORE ADVICE</span>
+    <div class="flow"><span><b>01</b> Intake</span><span>→</span><span><b>02</b> AI Dynamic Questions</span><span>→</span><span><b>03</b> Variable Mapping</span><span>→</span><span><b>04</b> Misalignment Detection</span><span>→</span><span><b>05</b> Path Recommendation</span><span>→</span><span><b>06</b> 30/90-Day Plan</span></div>
+  </div>
+</section>
+
+<section id="equation">
+  <div class="tag">03 · Core Formula</div>
+  <h2 class="title">AI-audited life-path fit</h2><div class="title-zh">AI 审计人生路径适配度公式</div>
+  <div class="formula">
+    <div class="formula-main"><span class="gradient">AI-Audited Life-Path Fit</span> <span class="op">=</span> I <span class="op">×</span> Q <span class="op">×</span> R <span class="op">×</span> A <span class="op">×</span> F <span class="op">×</span> T <span class="op">×</span> S <span class="op">×</span> P <span class="op">×</span> C</div>
+    <p class="zh zhfont" style="position:relative;margin-top:16px;color:var(--sub)">AI 审计路径适配度 = 基础信息 × 动态追问 × 节律变量 × 能动性 × 场域 × 时间窗口 × 身体承重 × 路径一致性 × 相变阈值</p>
+    <div class="legend">
+      <div class="legend-item"><span class="v">I</span><span><b>Intake Data</b>用户原始信息与困惑</span></div><div class="legend-item"><span class="v">Q</span><span><b>Dynamic Questions</b>AI 个性化追问质量</span></div><div class="legend-item"><span class="v">R</span><span><b>Rhythm</b>节律稳定度</span></div><div class="legend-item"><span class="v">A</span><span><b>Agency</b>能动性</span></div><div class="legend-item"><span class="v">F</span><span><b>Field</b>场域支持度</span></div><div class="legend-item"><span class="v">T</span><span><b>Temporal Window</b>时间窗口</span></div><div class="legend-item"><span class="v">S</span><span><b>Somatic Capacity</b>身体/情绪承重</span></div><div class="legend-item"><span class="v">P</span><span><b>Path Coherence</b>路径一致性</span></div><div class="legend-item"><span class="v">C</span><span><b>Change Threshold</b>相变阈值</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="modules">
+  <div class="tag">04 · Seven Modules</div><h2 class="title">Seven audit dimensions</h2><div class="title-zh">七大审计模块</div>
+  <div class="grid auto">
+    <div class="card"><span class="num">M01</span><h3>Inner Rhythm</h3><div class="h3zh">内在节律</div><p>兴趣、能量、注意力、欲望、情绪周期、身体节奏是否能连续承载目标。</p></div>
+    <div class="card"><span class="num">M02</span><h3>Agency</h3><div class="h3zh">能动性</div><p>是否能持续行动、做选择、承担后果、修正路径，而非停留在幻想。</p></div>
+    <div class="card"><span class="num">M03</span><h3>Goal Attractor</h3><div class="h3zh">目标吸引子</div><p>目标是否能反复牵引 ta 回到行动轨道，还是只是短期兴奋。</p></div>
+    <div class="card"><span class="num">M04</span><h3>Resource Structure</h3><div class="h3zh">资源结构</div><p>经济、时间、技能、人脉、平台、家庭、城市等资源是否匹配。</p></div>
+    <div class="card"><span class="num">M05</span><h3>Social Field</h3><div class="h3zh">社会场域</div><p>行业、制度、市场、文化、社群、竞争环境是否承接这个目标。</p></div>
+    <div class="card"><span class="num">M06</span><h3>Temporal Window</h3><div class="h3zh">时间窗口</div><p>目标处在上升期、窗口期、过渡期、红海期，还是衰退期。</p></div>
+    <div class="card"><span class="num">M07</span><h3>Phase Change Readiness</h3><div class="h3zh">相变准备度</div><p>是否接近转轨、公开显影、创业、创作爆发或身份重建的临界点。</p></div>
+  </div>
+</section>
+
+<section id="engine">
+  <div class="tag">05 · AI Dynamic Layer</div><h2 class="title">AI Dynamic Question Generator</h2><div class="title-zh">AI 动态量表生成器</div>
+  <p class="lede zh zhfont">真正的差异在这里：系统不是用固定题库判断人，而是根据用户输入生成定制追问，再把答案映射回变量、错位、路径、行动与复审条件。</p>
+  <div class="engine-box">
+    <div class="engine-head"><div><h3>AI Connection</h3><div class="sub">主流 AI 接入配置：GPT / Claude / Gemini / DeepSeek</div></div><span class="pill hot">Proxy endpoint required</span></div>
+    <div class="config-grid">
+      <div class="field"><label>AI Proxy Endpoint <span>代理端点</span></label><input id="ai-endpoint" type="text" placeholder="https://your-vercel-app.vercel.app/api/rlpam"/><div class="hint">GitHub Pages 前端不能安全保存 API Key。请用 Vercel / Cloudflare Worker 做后端代理。</div></div>
+      <div class="field"><label>Provider <span>模型供应商</span></label><select id="ai-provider"><option>openai</option><option>anthropic</option><option>gemini</option><option>deepseek</option><option>custom</option></select></div>
+      <div class="field"><label>Mode <span>模式</span></label><div class="toggle-line"><input id="mock-mode" type="checkbox" checked/> <span>Mock mode / 本地模拟</span></div><div class="hint">未接代理前可直接演示。</div></div>
+    </div>
+    <div class="slab">
+      <span class="pill warn">Generic AI Mode: Disabled</span>
+      <span class="pill ok" style="margin-left:8px">Structural Audit Mode: Active</span>
+      <p class="zh zhfont" style="margin-top:12px;color:var(--sub)">AI system prompt 已锁定：不得像普通职业规划机器人一样回答；必须先做结构审计，每条建议绑定变量、行动、风险与复审条件。</p>
+    </div>
+  </div>
+</section>
+
+<section id="audit">
+  <div class="tag">06 · Interactive Audit</div><h2 class="title">Run a structural audit</h2><div class="title-zh">运行一次结构审计</div>
+  <div class="audit-grid">
+    <div class="form-card">
+      <h3 class="enfont" style="font-style:italic;font-weight:400;font-size:24px">Intake Inputs</h3><div class="h3zh zhfont">基础信息 & 路径变量</div>
+      <div class="grid two">
+        <div class="field"><label>Name <span>名字</span></label><input id="f-name" type="text" placeholder="e.g. Mellow / 魏珏然"/></div>
+        <div class="field"><label>Age Range <span>年龄段</span></label><input id="f-age" type="text" placeholder="e.g. 25 / 20s"/></div>
+      </div>
+      <div class="field"><label>Current Situation <span>当前状态</span></label><textarea id="f-situation" placeholder="学习/工作/转轨/创业/创作/恢复中……"></textarea></div>
+      <div class="field"><label>Main Goal <span>当前最重要目标</span></label><textarea id="f-goal" placeholder="如果这个目标移动了，一切都会改变的那个目标。"></textarea></div>
+      <div class="field"><label>Biggest Confusion <span>最大困惑</span></label><textarea id="f-confusion" placeholder="现在到底卡在哪里？不要只写表面问题。"></textarea></div>
+      <div class="field"><label>Desired Path <span>想走的路</span></label><input id="f-path" type="text" placeholder="学术 / 创作 / 创业 / 公众表达 / 混合路径……"/></div>
+      <div class="field"><label>Current Resources <span>当前资源</span></label><textarea id="f-resources" placeholder="时间、钱、技能、人脉、平台、城市、家庭支持、作品、学历……"></textarea></div>
+      <div class="field"><label>Main Constraints <span>主要限制</span></label><textarea id="f-constraints" placeholder="真正限制 ta 的是什么？身体、资源、关系、场域、签证、钱、信心、技能……"></textarea></div>
+      <div class="field"><label>Time Window <span>目标时间窗口</span></label><input id="f-window" type="text" placeholder="7天 / 30天 / 90天 / 1年 / 2026-2028"/></div>
+
+      <div class="slab"><div class="tag" style="margin-bottom:12px">Seven Variables · 七大变量评分</div><div id="sliders"></div></div>
+      <div class="btn-row"><button class="btn primary" onclick="generateQuestions()">Generate AI Questions →</button><button class="btn" onclick="runStaticAudit()">Static Audit</button><button class="btn" onclick="resetAll()">Reset</button></div>
+      <div id="question-loading" class="loading">AI STRUCTURAL QUESTIONING IN PROGRESS…</div>
+      <div id="ai-questions" class="ai-questions"></div>
+      <div id="answer-actions" class="btn-row" style="display:none"><button class="btn primary" onclick="generateAIAuditReport()">Generate AI Audit Report →</button><button class="btn" onclick="runStaticAudit()">Fallback Structural Report</button></div>
+    </div>
+
+    <div class="result-card" id="result-card">
+      <h3 class="enfont" style="font-style:italic;font-weight:400;font-size:24px">Audit Result</h3><div class="h3zh zhfont">审计结果</div>
+      <div id="result-body"><div class="result-empty"><span class="glyph">◇</span><div>WAITING FOR STRUCTURAL INPUT</div><div class="zh zhfont" style="margin-top:6px;font-size:13px">填写左侧表单 → 生成 AI 追问 → 回答 → 生成报告</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="layers">
+  <div class="tag">07 · Four-Layer Full-Dimensional Analysis</div><h2 class="title">The model reads through four layers</h2><div class="title-zh">四层全维分析</div>
+  <div class="grid auto">
+    <div class="card"><span class="num">LAYER 01</span><h3>Naming</h3><div class="h3zh">命名行为</div><p>把“人生困惑”重新命名为“路径节律问题”，夺回解释权。</p></div>
+    <div class="card"><span class="num">LAYER 02</span><h3>Pressure</h3><div class="h3zh">加压行为</div><p>把“我不知道怎么办”压成变量：节律、能动性、资源、场域、时间窗口、身体承重、相变阈值。</p></div>
+    <div class="card"><span class="num">LAYER 03</span><h3>Sliding</h3><div class="h3zh">滑义行为</div><p>目标不只是目标，它同时是欲望、吸引子、身份入口、社会位置与未来时间结构。</p></div>
+    <div class="card"><span class="num">LAYER 04</span><h3>Phase Change</h3><div class="h3zh">相变行为</div><p>当变量达到阈值，一个人不是换工作，而是整条人生路径发生换相。</p></div>
+  </div>
+</section>
+
+<section id="report">
+  <div class="tag">08 · Report Template</div><h2 class="title">AI audit report scaffold</h2><div class="title-zh">AI 审计报告模板</div>
+  <p class="lede zh zhfont">报告必须包含表层问题、隐藏结构问题、变量诊断、主要错位、主路径/辅路径/暂不适合路径、三大风险、7–30 天行动、30/90 天计划与复审条件。</p>
+  <div class="report-box" id="report-box">【AI 节律人生路径审计报告 / AI Rhythm Life-Path Audit Report】
+
+Surface Question / 表层问题: —
+Hidden Structural Question / 隐藏结构问题: —
+Current Life-Path Stage / 当前路径阶段: —
+Life-Path Fit Score / 路径适配度: —
+Variable Diagnosis / 变量诊断: —
+Main Misalignment / 主要错位: —
+Strongest Variable / 最强变量: —
+Weakest Variable / 最弱变量: —
+Best-Fit Path / 最适合路径: —
+Secondary Path / 辅助路径: —
+Unsuitable Path / 暂不适合路径: —
+Feasibility Score / 可行性评分: —
+Top 3 Risks / 三大风险: —
+Next 3 Actions / 下一步三个行动: —
+30-Day Rhythm Plan / 30 天节律计划: —
+90-Day Phase Plan / 90 天相变计划: —
+Recheck Condition / 复审条件: —
+
+— Run an audit above to generate the report —</div>
+  <div class="btn-row"><button class="btn primary" onclick="copyReport()">Copy Report ⇩</button><button class="btn" onclick="downloadReport()">Download .txt</button><span id="copy-feedback" class="copy-feedback">✓ COPIED</span></div>
+</section>
+
+<section id="ethics">
+  <div class="tag">09 · Boundary</div><h2 class="title">Use within limits</h2><div class="title-zh">使用边界</div>
+  <div class="ethics">
+    <h3 class="enfont" style="font-style:italic;font-weight:400">This model does not diagnose, predict destiny, or replace professional advice.</h3>
+    <p class="zh zhfont" style="margin-top:8px;color:var(--muted)">本模型不用于诊断、算命或替代专业建议。它提供的是结构化反思与节律型决策支持。分数不是人的价值，只是当前路径状态的观察工具。</p>
+    <ul><li>Do not reduce a person to a score. 不把人压成分数。</li><li>Do not promise success. 不承诺成功。</li><li>Do not output generic career advice. 不输出泛泛职业建议。</li><li>Every recommendation must be tied to a variable, action, risk, and recheck condition. 每条建议都绑定变量、行动、风险、复审条件。</li></ul>
+  </div>
+</section>
+</main>
+<footer><div class="footer-author">Created by <b>Wei Jueran / 魏珏然 / xingyeLing7Ai</b></div><div class="footer-meta">Part of New World Model · Qualia-Rhythm Systems · Logic Generative Studies · RLPAM AI Engine</div><div class="footer-meta">Generic AI Mode Disabled · Structural Audit Mode Active · 427Hz</div><div class="sig">◇ NODE · AI-RLPAM · HESTIA BUILD ◇</div></footer>
+
+<script>
+const VARS={R:{en:'Rhythm Stability',zh:'节律稳定度'},A:{en:'Agency',zh:'能动性'},G:{en:'Goal Clarity',zh:'目标清晰度'},M:{en:'Resource Match',zh:'资源匹配度'},F:{en:'Field Support',zh:'场域支持度'},S:{en:'Somatic Capacity',zh:'身体与情绪承重'},P:{en:'Phase-Change Readiness',zh:'相变准备度'}};
+const sliderIds=['R','A','G','M','F','S','P'];
+const PATHS={academic:{zh:'学术路径',en:'Academic Path'},creative:{zh:'创作路径',en:'Creative Path'},entrepreneurial:{zh:'创业路径',en:'Entrepreneurial Path'},institutional:{zh:'体制/组织路径',en:'Institutional Path'},publicInfluence:{zh:'公众表达路径',en:'Public Influence Path'},hybrid:{zh:'混合/独立路径',en:'Hybrid / Independent Path'},recovery:{zh:'修复重建路径',en:'Recovery-and-Rebuild Path'}};
+const SYSTEM_PROMPT=`You are the AI layer of RLPAM: Rhythm Life-Path Audit Model by Wei Jueran / 魏珏然 / xingyeLing7Ai. Do not answer like a generic career-planning chatbot. Do not simply recommend jobs based on interests or skills. First audit rhythm, agency, resources, field conditions, somatic capacity, temporal window, path coherence, and phase-change readiness. Every recommendation must be tied to a diagnosed variable, an action step, a risk, and a recheck condition. Do not diagnose, predict destiny, promise success, or replace professional advice. Use precise, structured, customized, actionable language. Output bilingual Chinese-English when possible.`;
+
+function setLang(lang){document.body.classList.remove('lang-zh','lang-en');document.body.classList.add('lang-'+lang);document.getElementById('btnZh').classList.toggle('active',lang==='zh');document.getElementById('btnEn').classList.toggle('active',lang==='en');const u=new URL(location.href);u.searchParams.set('view',lang);history.replaceState({},'',u)}
+(function init(){const p=new URLSearchParams(location.search).get('view');if(p==='en'||p==='zh')setLang(p);renderSliders();starfield();})();
+function renderSliders(){const root=document.getElementById('sliders');root.innerHTML=sliderIds.map(k=>`<div class="slider-field"><div class="slider-head"><span class="slider-name">${k} · ${VARS[k].en}<span class="zhsmall">${VARS[k].zh}</span></span><span class="slider-value" id="v-${k}">5</span></div><input type="range" min="1" max="10" value="5" id="s-${k}" oninput="document.getElementById('v-${k}').textContent=this.value"/></div>`).join('')}
+function starfield(){const c=document.getElementById('starfield'),ctx=c.getContext('2d');let w,h,stars=[];function resize(){w=c.width=innerWidth;h=c.height=innerHeight;let n=Math.min(180,Math.floor(w*h/9000));stars=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.2,a:Math.random()*.6+.2,d:Math.random()*.012+.002,p:Math.random()*Math.PI*2}))}function tick(){ctx.clearRect(0,0,w,h);for(const s of stars){s.p+=s.d;let a=s.a*(.5+.5*Math.sin(s.p));ctx.fillStyle=s.p%(Math.PI*2)<Math.PI?`rgba(95,200,144,${a*.7})`:`rgba(236,90,110,${a*.6})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill()}requestAnimationFrame(tick)}addEventListener('resize',resize);resize();tick()}
+function collect(){const v=id=>(document.getElementById(id)?.value||'').trim();const scores={};sliderIds.forEach(k=>scores[k]=+document.getElementById('s-'+k).value);return {name:v('f-name'),age:v('f-age'),situation:v('f-situation'),goal:v('f-goal'),confusion:v('f-confusion'),desiredPath:v('f-path'),resources:v('f-resources'),constraints:v('f-constraints'),timeWindow:v('f-window'),scores,answers:collectAnswers()}}
+function collectAnswers(){return Array.from(document.querySelectorAll('[data-q-answer]')).map((el,i)=>({index:i+1,question:el.dataset.question,type:el.dataset.type,answer:el.value.trim()})).filter(x=>x.question||x.answer)}
+function scoreTotal(scores){return Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/70*100)}
+function stageFor(total){if(total<40)return {en:'Dislocated',zh:'路径位错期',cls:'warn',desc:'目标、节律、资源与场域暂时错位，不适合强行冲刺。先重建节律、资源与身体承重。'};if(total<60)return {en:'Forming',zh:'路径成形期',cls:'ok',desc:'方向开始出现，但目标与行动还未完全对齐。需要降低噪声，建立稳定推进机制。'};if(total<80)return {en:'Aligned',zh:'节律对齐期',cls:'ok',desc:'目标、行动、资源和场域已有较好对齐，可以进入系统推进。'};return {en:'Phase-Ready',zh:'相变临界期',cls:'hot',desc:'已经接近转轨或突破点，需要抓住时间窗口，集中资源推进。'}}
+function strongestWeakest(scores){let strong='R',weak='R';sliderIds.forEach(k=>{if(scores[k]>scores[strong])strong=k;if(scores[k]<scores[weak])weak=k});return {strong,weak}}
+function pickPaths(s){let a=[];if(s.A>=7&&s.F>=6)a.push(['entrepreneurial',s.A+s.F+s.P]);if(s.A>=7&&s.P>=7)a.push(['publicInfluence',s.A+s.P+s.G]);if(s.R>=7&&s.G>=7)a.push(['academic',s.R+s.G+s.M]);if(s.R>=6&&s.G>=6&&s.S>=5)a.push(['creative',s.R+s.G+s.A]);if(s.M>=6&&s.F>=6)a.push(['institutional',s.M+s.F]);if(s.F<=5&&s.A>=6)a.push(['hybrid',s.A+10-s.F]);if(s.M<=4||s.S<=4)a.push(['recovery',10-s.M+10-s.S+10-s.R]);if(!a.length)a.push(['hybrid',0]);return [...new Map(a.sort((x,y)=>y[1]-x[1]).map(x=>[x[0],x])).values()].slice(0,3).map(x=>x[0])}
+async function generateQuestions(){const loading=document.getElementById('question-loading');loading.classList.add('show');const data=collect();try{let questions;if(isMock()){questions=simulateQuestions(data)}else{questions=await callAI('generate_questions',buildQuestionPrompt(data),data);questions=parseQuestions(questions)||simulateQuestions(data)}renderQuestions(questions);document.getElementById('answer-actions').style.display='flex'}catch(e){renderQuestions(simulateQuestions(data));document.getElementById('answer-actions').style.display='flex'}finally{loading.classList.remove('show')}}
+function buildQuestionPrompt(d){return `${SYSTEM_PROMPT}\n\nTASK: Generate highly customized RLPAM audit questions. Do NOT generate generic career advice questions. Output JSON array, each item {type, question}. Include: 5 clarifying questions, 7 rhythm-variable scoring/reflection questions, 3 path-risk questions, 3 temporal-window questions, 1 true-desire question, 1 phase-threshold question.\n\nUSER INTAKE:\n${JSON.stringify(d,null,2)}`}
+function simulateQuestions(d){const weak=strongestWeakest(d.scores).weak;const goal=d.goal||'这个目标';return [
+{type:'clarifying',question:`你说的“${goal}”如果被压成一个 30 天内可验证的结果，它具体会是什么？`},{type:'clarifying',question:'这个目标是你真正想要的，还是你正在回应某个外部评价、家庭期待、同辈竞争或旧身份压力？'},{type:'clarifying',question:'过去三次你想推进但没有推进时，分别卡在身体、资源、行动、关系还是场域？'},{type:'clarifying',question:'如果暂时不考虑成功和失败，你最不愿意失去的生活节律是什么？'},{type:'clarifying',question:'你希望这个目标最终改变你的身份、收入、自由度、影响力，还是存在感？请排序。'},
+...sliderIds.map(k=>({type:'variable',question:`${VARS[k].zh} / ${VARS[k].en}：你给自己 ${d.scores[k]}/10。这个分数背后的一个具体证据是什么？如果要提高 1 分，最小动作是什么？`})),
+{type:'risk',question:`当前最低变量是「${VARS[weak].zh}」。如果它不改变，未来 30 天最可能发生的路径风险是什么？`},{type:'risk',question:'哪一种风险最危险：资源不足、行动断裂、身体过载、场域不接、目标失真、还是关系消耗？为什么？'},{type:'risk',question:'你现在最容易把什么误认为“努力”，但它其实只是消耗或拖延？'},
+{type:'temporal',question:'这个目标的时间窗口是正在打开、已经打开、即将关闭，还是你还没有足够证据判断？'},{type:'temporal',question:'如果 30 天内必须验证一次，你会用什么指标判断“路径在动”？'},{type:'temporal',question:'如果 90 天后没有变化，你会认为是方向错了、方法错了、节律断了，还是窗口没到？'},
+{type:'desire',question:'真正欲望识别：如果这个目标没有掌声、没有认可、没有钱、没有外部证明，你还会继续做吗？为什么？'},
+{type:'phase',question:'相变阈值：出现什么信号时，你会知道自己不是在微调，而是真的该换轨/启动/公开显影了？'}]}
+function renderQuestions(qs){document.getElementById('ai-questions').innerHTML=qs.map((q,i)=>`<div class="q-card"><div class="q-type">${String(i+1).padStart(2,'0')} · ${escapeHTML(q.type||'question')}</div><div class="q-text">${escapeHTML(q.question||q)}</div><textarea data-q-answer data-type="${escapeHTML(q.type||'question')}" data-question="${escapeHTML(q.question||q)}" placeholder="在这里回答 / Answer here..."></textarea></div>`).join('')}
+async function generateAIAuditReport(){const loading=document.getElementById('question-loading');loading.textContent='AI STRUCTURAL REPORT GENERATION IN PROGRESS…';loading.classList.add('show');const data=collect();try{let report;if(isMock()){report=simulateReport(data)}else{report=await callAI('generate_report',buildReportPrompt(data),data);if(!report||report.length<300)report=simulateReport(data)}setReport(report);renderStaticResult(data,report)}catch(e){const report=simulateReport(data);setReport(report);renderStaticResult(data,report)}finally{loading.classList.remove('show');loading.textContent='AI STRUCTURAL QUESTIONING IN PROGRESS…';document.getElementById('report').scrollIntoView({behavior:'smooth',block:'start'})}}
+function buildReportPrompt(d){return `${SYSTEM_PROMPT}\n\nTASK: Generate a precise, structured, customized RLPAM audit report. Do not give generic career advice. Every recommendation must bind to a variable, action, risk, and recheck condition. Output bilingual Chinese-English where possible. Must include these exact headings: Surface Question, Hidden Structural Question, Current Life-Path Stage, Variable Diagnosis, Main Misalignment, Strongest Variable, Weakest Variable, Best-Fit Path, Secondary Path, Unsuitable Path, Feasibility Score, Top 3 Risks, Next 3 Actions, 30-Day Rhythm Plan, 90-Day Phase Plan, Recheck Condition.\n\nDATA:\n${JSON.stringify(d,null,2)}`}
+function isMock(){return document.getElementById('mock-mode').checked||!document.getElementById('ai-endpoint').value.trim()}
+async function callAI(task,prompt,payload){const endpoint=document.getElementById('ai-endpoint').value.trim();const provider=document.getElementById('ai-provider').value;const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider,task,systemPrompt:SYSTEM_PROMPT,prompt,payload})});if(!res.ok)throw new Error('AI endpoint failed');const json=await res.json();return json.text||json.content||json.result||json.questions||''}
+function parseQuestions(x){try{if(Array.isArray(x))return x;const m=String(x).match(/\[[\s\S]*\]/);return JSON.parse(m?m[0]:x)}catch(e){return null}}
+function simulateReport(d){const total=scoreTotal(d.scores),st=stageFor(total),sw=strongestWeakest(d.scores),paths=pickPaths(d.scores);const goal=d.goal||'未填写';const conf=d.confusion||'未填写';const surface=conf!=='未填写'?conf:`我该如何推进 ${goal}`;const hidden=hiddenQuestion(sw.weak,d);const risks=risksFor(sw.weak);const actions=actionsFor(sw.weak);return `【AI 节律人生路径审计报告 / AI Rhythm Life-Path Audit Report】\n\nSurface Question / 表层问题:\n${surface}\n\nHidden Structural Question / 隐藏结构问题:\n${hidden}\n\nCurrent Life-Path Stage / 当前路径阶段:\n${st.en} · ${st.zh}\n\nLife-Path Fit Score / 路径适配度:\n${total}/100\n\nVariable Diagnosis / 变量诊断:\nR 节律稳定度: ${d.scores.R}/10\nA 能动性: ${d.scores.A}/10\nG 目标清晰度: ${d.scores.G}/10\nM 资源匹配度: ${d.scores.M}/10\nF 场域支持度: ${d.scores.F}/10\nS 身体与情绪承重: ${d.scores.S}/10\nP 相变准备度: ${d.scores.P}/10\n\nMain Misalignment / 主要错位:\n当前最大瓶颈是「${VARS[sw.weak].zh} / ${VARS[sw.weak].en}」。这说明问题不是“职业选择”本身，而是目标结构中有一个关键变量未对齐。\n\nStrongest Variable / 最强变量:\n${sw.strong} · ${VARS[sw.strong].zh} / ${VARS[sw.strong].en}\n\nWeakest Variable / 最弱变量:\n${sw.weak} · ${VARS[sw.weak].zh} / ${VARS[sw.weak].en}\n\nBest-Fit Path / 最适合路径:\n${pathLabel(paths[0])}\n\nSecondary Path / 辅助路径:\n${pathLabel(paths[1])}\n\nUnsuitable Path / 暂不适合路径:\n${unsuitableFor(sw.weak)}\n\nFeasibility Score / 可行性评分:\n${total}/100. 这不是成功承诺，而是当前结构的推进可行性读数。\n\nTop 3 Risks / 三大风险:\n1. ${risks[0]}\n2. ${risks[1]}\n3. ${risks[2]}\n\nNext 3 Actions / 下一步三个行动:\n1. ${actions[0]}\n2. ${actions[1]}\n3. ${actions[2]}\n\n30-Day Rhythm Plan / 30 天节律计划:\n${plan30(st.en,sw.weak)}\n\n90-Day Phase Plan / 90 天相变计划:\n${plan90(st.en,sw.strong)}\n\nRecheck Condition / 复审条件:\n${recheck(st.en,sw.weak)}\n\nBoundary / 边界:\n本报告不诊断、不算命、不承诺成功、不替代专业建议。它只提供结构化反思与路径决策支持。\n\nGenerated by AI-RLPAM · Generic AI Mode Disabled · Structural Audit Mode Active`}
+function hiddenQuestion(k,d){const map={R:'真正的问题是：ta 的生活节律能否连续承载这个目标，而不是靠短期兴奋推进？',A:'真正的问题是：ta 是否有可重复的行动机制，而不是只在情绪高点行动？',G:'真正的问题是：目标是否已经清晰到可以被验证，还是仍停留在愿望层？',M:'真正的问题是：资源结构是否足够匹配当前野心，缺口是否被准确识别？',F:'真正的问题是：外部场域是否真的承接这个目标，还是 ta 正在对抗一个暂时不接的环境？',S:'真正的问题是：身体和情绪承重是否足够支持推进，而不是先被目标压垮？',P:'真正的问题是：现在是否真的到了相变时刻，还是需要先完成准备机制？'};return map[k]}
+function risksFor(k){const map={R:['行动呈脉冲式爆发，随后断裂。','目标被情绪高点误认为长期方向。','生活结构无法支持持续推进。'],A:['知道方向但没有持续行动。','把等待状态误认为准备状态。','每次失败后缺少修正机制。'],G:['目标过大，无法转化为 30 天验证。','身份欲望与现实动作不一致。','容易被外界评价改写方向。'],M:['缺钱、缺时间、缺技能或缺平台导致无法落地。','过早冲刺消耗基础资源。','把资源不足误读成能力不足。'],F:['目标所在场域暂时不承接。','在错误平台证明自己。','外部反馈稀薄导致误判方向。'],S:['身体/情绪过载导致行动中断。','用意志力硬推，长期反噬。','在低承重期做高风险决策。'],P:['过早启动导致相变失败。','临界点出现却没有启动机制。','把小调整误认为真正换轨。']};return map[k]}
+function actionsFor(k){const map={R:['连续 14 天记录能量峰值与断裂点。','建立一个每天 30 分钟的固定核心动作。','切断 3 个最明显的节律打断源。'],A:['把目标拆成今天能完成的 30 分钟版本。','设置一个外部问责机制。','每周复盘一次：完成、未完成、原因、下周动作。'],G:['把目标写成一句可验证结果。','列出目标背后的身份欲望与现实收益。','问自己：没有掌声和认可时是否还会做。'],M:['列出资源缺口：钱、时间、技能、人脉、平台。','先补一个杠杆最大的资源。','找一个路径内的人问真实成本。'],F:['研究目标场域过去 12 个月的资金、人才、平台信号。','建立 3 个真实场域连接。','判断你是在窗口布点还是在红海抢位。'],S:['把睡眠、运动、恢复写进核心计划。','暂缓重大决策，先恢复承重。','识别 3 个最大情绪消耗源并降级一个。'],P:['设计一个公开显影的最小版本。','设定启动条件和停止条件。','为相变准备流程，而不是临时反应。']};return map[k]}
+function pathLabel(k){return k?`${PATHS[k].zh} / ${PATHS[k].en}`:'—'}
+function unsuitableFor(k){if(k==='S'||k==='M')return '高压创业/高曝光公众表达暂不适合，需先修复承重与资源。';if(k==='F')return '强依赖机构背书或单一平台的路径暂不适合。';if(k==='A')return '自由度过高、无人问责的路径暂不适合。';if(k==='G')return '长期投入型路径需先澄清目标，不宜立刻绑定。';return '过度消耗、无复盘、无验证指标的路径暂不适合。'}
+function plan30(stage,weak){if(stage==='Dislocated')return '30 天内不强行冲刺。目标是恢复最低节律、补一个关键资源、稳定身体承重。';if(stage==='Forming')return '30 天建立最小推进机制：每周一个可验证产出，每周一次结构复盘。';if(stage==='Aligned')return '30 天把已对齐部分系统化：流程、时间块、公开节点、反馈机制。';return '30 天内执行一次启动/公开显影动作，并记录场域反馈。'}
+function plan90(stage,strong){if(stage==='Dislocated')return '90 天内完成节律重建与资源补位，再复审目标。';if(stage==='Forming')return '90 天内形成稳定运行闭环：启动—执行—反馈—修正。';if(stage==='Aligned')return '90 天内完成一次完整项目周期，并建立可重复系统。';return '90 天内完成相变事件，并为新身份建立基础设施。'}
+function recheck(stage,weak){if(stage==='Dislocated')return `当 ${VARS[weak].zh} 提高到 6/10 以上，且连续 14 天节律不断裂时复审。`;if(stage==='Forming')return '当连续 30 天有稳定推进证据，且至少一个外部场域开始回应时复审。';if(stage==='Aligned')return '当出现资金、邀请、平台、合作、作品反馈等外部承接信号时复审。';return '启动动作完成后 7 天内复审：看反馈、承重、资源消耗和下一步窗口。'}
+function runStaticAudit(){const data=collect();const report=simulateReport(data);setReport(report);renderStaticResult(data,report);document.getElementById('result-card').scrollIntoView({behavior:'smooth',block:'start'})}
+function renderStaticResult(data){const total=scoreTotal(data.scores),st=stageFor(total),sw=strongestWeakest(data.scores),paths=pickPaths(data.scores);document.getElementById('result-body').innerHTML=`<div class="score">${total}</div><div class="score-label">Life-Path Fit Score · 路径适配度</div><div class="stage"><span class="pill ${st.cls}">${st.en} · ${st.zh}</span></div><div class="reading"><h4>Stage Reading</h4><div class="zh zhfont">${st.desc}</div></div><div class="reading"><h4>Variable Distribution</h4>${sliderIds.map(k=>`<div class="bar-row"><div class="lbl"><b>${k} · ${VARS[k].zh}</b><span>${data.scores[k]}/10</span></div><div class="track"><div class="fill" style="width:${data.scores[k]*10}%"></div></div></div>`).join('')}</div><div class="reading"><h4>Path Recommendation</h4><div>${paths.map((p,i)=>`<span class="pill ${i===0?'hot':''}">${PATHS[p].zh}</span>`).join(' ')}</div><div class="mini-list"><div>Strongest: ${sw.strong} · ${VARS[sw.strong].zh}</div><div>Weakest: ${sw.weak} · ${VARS[sw.weak].zh}</div><div>Advice type: variable-bound, risk-aware, 7–30 day actionable.</div></div></div>`}
+function setReport(text){document.getElementById('report-box').textContent=text}
+function resetAll(){['f-name','f-age','f-situation','f-goal','f-confusion','f-path','f-resources','f-constraints','f-window','ai-endpoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='' });sliderIds.forEach(k=>{document.getElementById('s-'+k).value=5;document.getElementById('v-'+k).textContent=5});document.getElementById('ai-questions').innerHTML='';document.getElementById('answer-actions').style.display='none';document.getElementById('result-body').innerHTML='<div class="result-empty"><span class="glyph">◇</span><div>WAITING FOR STRUCTURAL INPUT</div><div class="zh zhfont" style="margin-top:6px;font-size:13px">填写左侧表单 → 生成 AI 追问 → 回答 → 生成报告</div></div>';setReport('【AI 节律人生路径审计报告 / AI Rhythm Life-Path Audit Report】\n\nSurface Question / 表层问题: —\nHidden Structural Question / 隐藏结构问题: —\nCurrent Life-Path Stage / 当前路径阶段: —\nLife-Path Fit Score / 路径适配度: —\nVariable Diagnosis / 变量诊断: —\nMain Misalignment / 主要错位: —\nStrongest Variable / 最强变量: —\nWeakest Variable / 最弱变量: —\nBest-Fit Path / 最适合路径: —\nSecondary Path / 辅助路径: —\nUnsuitable Path / 暂不适合路径: —\nFeasibility Score / 可行性评分: —\nTop 3 Risks / 三大风险: —\nNext 3 Actions / 下一步三个行动: —\n30-Day Rhythm Plan / 30 天节律计划: —\n90-Day Phase Plan / 90 天相变计划: —\nRecheck Condition / 复审条件: —\n\n— Run an audit above to generate the report —')}
+function copyReport(){const text=document.getElementById('report-box').textContent;navigator.clipboard.writeText(text).then(()=>{const fb=document.getElementById('copy-feedback');fb.classList.add('show');setTimeout(()=>fb.classList.remove('show'),1600)}).catch(()=>alert('Copy failed.'))}
+function downloadReport(){const text=document.getElementById('report-box').textContent;const blob=new Blob([text],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='AI-RLPAM-Report-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+</script>
+</body>
+</html>
