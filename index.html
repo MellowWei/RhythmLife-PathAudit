@@ -233,20 +233,51 @@ function setLang(lang){document.body.classList.remove('lang-zh','lang-en');docum
 function renderSliders(){const root=document.getElementById('sliders');root.innerHTML=sliderIds.map(k=>`<div class="slider-field"><div class="slider-head"><span class="slider-name">${k} · ${VARS[k].en}<span class="zhsmall">${VARS[k].zh}</span></span><span class="slider-value" id="v-${k}">5</span></div><input type="range" min="1" max="10" value="5" id="s-${k}" oninput="document.getElementById('v-${k}').textContent=this.value"/></div>`).join('')}
 function starfield(){const c=document.getElementById('starfield'),ctx=c.getContext('2d');let w,h,stars=[];function resize(){w=c.width=innerWidth;h=c.height=innerHeight;let n=Math.min(180,Math.floor(w*h/9000));stars=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.2,a:Math.random()*.6+.2,d:Math.random()*.012+.002,p:Math.random()*Math.PI*2}))}function tick(){ctx.clearRect(0,0,w,h);for(const s of stars){s.p+=s.d;let a=s.a*(.5+.5*Math.sin(s.p));ctx.fillStyle=s.p%(Math.PI*2)<Math.PI?`rgba(95,200,144,${a*.7})`:`rgba(236,90,110,${a*.6})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill()}requestAnimationFrame(tick)}addEventListener('resize',resize);resize();tick()}
 function collect(){const v=id=>(document.getElementById(id)?.value||'').trim();const scores={};sliderIds.forEach(k=>scores[k]=+document.getElementById('s-'+k).value);return {name:v('f-name'),age:v('f-age'),situation:v('f-situation'),goal:v('f-goal'),confusion:v('f-confusion'),desiredPath:v('f-path'),resources:v('f-resources'),constraints:v('f-constraints'),timeWindow:v('f-window'),scores,answers:collectAnswers()}}
-function collectAnswers(){return Array.from(document.querySelectorAll('[data-q-answer]')).map((el,i)=>({index:i+1,question:el.dataset.question,type:el.dataset.type,answer:el.value.trim()})).filter(x=>x.question||x.answer)}
+function collectAnswers(){return Array.from(document.querySelectorAll('[data-q-answer]')).map((el,i)=>({index:i+1,question:el.dataset.question,type:el.dataset.type,input:el.dataset.input,answer:String(el.value||'').trim()})).filter(x=>x.question||x.answer)}
 function scoreTotal(scores){return Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/70*100)}
 function stageFor(total){if(total<40)return {en:'Dislocated',zh:'路径位错期',cls:'warn',desc:'目标、节律、资源与场域暂时错位，不适合强行冲刺。先重建节律、资源与身体承重。'};if(total<60)return {en:'Forming',zh:'路径成形期',cls:'ok',desc:'方向开始出现，但目标与行动还未完全对齐。需要降低噪声，建立稳定推进机制。'};if(total<80)return {en:'Aligned',zh:'节律对齐期',cls:'ok',desc:'目标、行动、资源和场域已有较好对齐，可以进入系统推进。'};return {en:'Phase-Ready',zh:'相变临界期',cls:'hot',desc:'已经接近转轨或突破点，需要抓住时间窗口，集中资源推进。'}}
 function strongestWeakest(scores){let strong='R',weak='R';sliderIds.forEach(k=>{if(scores[k]>scores[strong])strong=k;if(scores[k]<scores[weak])weak=k});return {strong,weak}}
 function pickPaths(s){let a=[];if(s.A>=7&&s.F>=6)a.push(['entrepreneurial',s.A+s.F+s.P]);if(s.A>=7&&s.P>=7)a.push(['publicInfluence',s.A+s.P+s.G]);if(s.R>=7&&s.G>=7)a.push(['academic',s.R+s.G+s.M]);if(s.R>=6&&s.G>=6&&s.S>=5)a.push(['creative',s.R+s.G+s.A]);if(s.M>=6&&s.F>=6)a.push(['institutional',s.M+s.F]);if(s.F<=5&&s.A>=6)a.push(['hybrid',s.A+10-s.F]);if(s.M<=4||s.S<=4)a.push(['recovery',10-s.M+10-s.S+10-s.R]);if(!a.length)a.push(['hybrid',0]);return [...new Map(a.sort((x,y)=>y[1]-x[1]).map(x=>[x[0],x])).values()].slice(0,3).map(x=>x[0])}
 async function generateQuestions(){const loading=document.getElementById('question-loading');loading.classList.add('show');const data=collect();try{let questions;if(isMock()){questions=simulateQuestions(data)}else{questions=await callAI('generate_questions',buildQuestionPrompt(data),data);questions=parseQuestions(questions)||simulateQuestions(data)}renderQuestions(questions);document.getElementById('answer-actions').style.display='flex'}catch(e){renderQuestions(simulateQuestions(data));document.getElementById('answer-actions').style.display='flex'}finally{loading.classList.remove('show')}}
 function buildQuestionPrompt(d){return `${SYSTEM_PROMPT}\n\nTASK: Generate highly customized RLPAM audit questions. Do NOT generate generic career advice questions. Output JSON array, each item {type, question}. Include: 5 clarifying questions, 7 rhythm-variable scoring/reflection questions, 3 path-risk questions, 3 temporal-window questions, 1 true-desire question, 1 phase-threshold question.\n\nUSER INTAKE:\n${JSON.stringify(d,null,2)}`}
-function simulateQuestions(d){const weak=strongestWeakest(d.scores).weak;const goal=d.goal||'这个目标';return [
-{type:'clarifying',question:`你说的“${goal}”如果被压成一个 30 天内可验证的结果，它具体会是什么？`},{type:'clarifying',question:'这个目标是你真正想要的，还是你正在回应某个外部评价、家庭期待、同辈竞争或旧身份压力？'},{type:'clarifying',question:'过去三次你想推进但没有推进时，分别卡在身体、资源、行动、关系还是场域？'},{type:'clarifying',question:'如果暂时不考虑成功和失败，你最不愿意失去的生活节律是什么？'},{type:'clarifying',question:'你希望这个目标最终改变你的身份、收入、自由度、影响力，还是存在感？请排序。'},
-...sliderIds.map(k=>({type:'variable',question:`${VARS[k].zh} / ${VARS[k].en}：你给自己 ${d.scores[k]}/10。这个分数背后的一个具体证据是什么？如果要提高 1 分，最小动作是什么？`})),
-{type:'risk',question:`当前最低变量是「${VARS[weak].zh}」。如果它不改变，未来 30 天最可能发生的路径风险是什么？`},{type:'risk',question:'哪一种风险最危险：资源不足、行动断裂、身体过载、场域不接、目标失真、还是关系消耗？为什么？'},{type:'risk',question:'你现在最容易把什么误认为“努力”，但它其实只是消耗或拖延？'},
-{type:'temporal',question:'这个目标的时间窗口是正在打开、已经打开、即将关闭，还是你还没有足够证据判断？'},{type:'temporal',question:'如果 30 天内必须验证一次，你会用什么指标判断“路径在动”？'},{type:'temporal',question:'如果 90 天后没有变化，你会认为是方向错了、方法错了、节律断了，还是窗口没到？'},
-{type:'desire',question:'真正欲望识别：如果这个目标没有掌声、没有认可、没有钱、没有外部证明，你还会继续做吗？为什么？'},
-{type:'phase',question:'相变阈值：出现什么信号时，你会知道自己不是在微调，而是真的该换轨/启动/公开显影了？'}]}
+function simulateQuestions(d){
+  const weak=strongestWeakest(d.scores).weak; const goal=d.goal||'这个目标';
+  return [
+    {type:'clarifying',input:'textarea',question:`你说的“${goal}”如果被压成一个 30 天内可验证的结果，它具体会是什么？`,placeholder:'必须文字回答：写出一个可验证结果，而不是抽象愿望。'},
+    {type:'desire-map',input:'select',question:'这个目标目前更像什么？',options:['真正内在欲望','外部期待/家庭/同辈压力','现实压力下的选择','身份转型入口','还不确定，是混合状态']},
+    {type:'stuck-point',input:'select',question:'过去推进失败时，最常卡在哪里？',options:['身体/精力承重不足','资源不足：钱/时间/技能/人脉','行动断裂：知道但做不出','关系/家庭/环境消耗','场域不接：行业/平台/市场没回应','时间窗口没到','目标本身不够清晰']},
+    {type:'rhythm',input:'slider',question:'你当前的日常节律能连续承载这个目标吗？',min:1,max:10,left:'完全不能',right:'非常能'},
+    {type:'priority',input:'select',question:'你最希望这个目标优先改变什么？',options:['自由度','收入/资源','身份感','影响力/被看见','创作/表达出口','稳定感','关系与生活结构']},
+    ...sliderIds.map(k=>({type:'variable',input:'slider',question:`${VARS[k].zh} / ${VARS[k].en}：你对这个变量的真实把握程度是多少？`,min:1,max:10,left:'很弱/不确定',right:'很强/很确定',defaultValue:d.scores[k]})),
+    {type:'risk',input:'select',question:`当前最低变量是「${VARS[weak].zh}」。如果它不改变，最可能出现的风险是？`,options:risksFor(weak)},
+    {type:'risk',input:'select',question:'你现在最危险的误判可能是什么？',ofunction renderQuestions(qs){
+  document.getElementById('ai-questions').innerHTML=qs.map((q,i)=>{
+    const id=`q-${i}`; const input=q.input||inferInputType(q);
+    let control='';
+    if(input==='textarea'){
+      control=`<textarea data-q-answer data-input="textarea" data-type="${escapeHTML(q.type||'question')}" data-question="${escapeHTML(q.question||q)}" placeholder="${escapeHTML(q.placeholder||'在这里回答 / Answer here...')}"></textarea>`;
+    }else if(input==='select'){
+      const opts=(q.options||['是 / Yes','否 / No','不确定 / Not sure']).map(o=>`<option value="${escapeHTML(o)}">${escapeHTML(o)}</option>`).join('');
+      control=`<select data-q-answer data-input="select" data-type="${escapeHTML(q.type||'question')}" data-question="${escapeHTML(q.question||q)}"><option value="">选择一个选项 / Select...</option>${opts}</select>`;
+    }else{
+      const min=q.min||1,max=q.max||10,val=q.defaultValue||5;
+      control=`<div class="slider-field" style="margin-top:8px"><div class="slider-head"><span class="slider-name">${escapeHTML(q.left||'Low')}</span><span class="slider-value" id="${id}-val">${val}</span><span class="slider-name">${escapeHTML(q.right||'High')}</span></div><input data-q-answer data-input="slider" data-type="${escapeHTML(q.type||'question')}" data-question="${escapeHTML(q.question||q)}" type="range" min="${min}" max="${max}" value="${val}" oninput="document.getElementById('${id}-val').textContent=this.value"/></div>`;
+    }
+    return `<div class="q-card"><div class="q-type">${String(i+1).padStart(2,'0')} · ${escapeHTML(q.type||'question')} · ${input.toUpperCase()}</div><div class="q-text">${escapeHTML(q.question||q)}</div>${control}</div>`
+  }).join('')
+}
+function inferInputType(q){
+  const t=String(q.type||'').toLowerCase();
+  if(t.includes('desire')||t.includes('phase')||t.includes('clarifying')) return 'textarea';
+  if(t.includes('variable')||t.includes('risk')) return 'slider';
+  return 'select';
+}
+async function generateAIAuditReport,'方向是否更清晰']},
+    {type:'temporal',input:'select',question:'如果 90 天后没有变化，最可能说明什么？',options:['方向可能错了','方法可能错了','节律断了','资源不足','场域窗口没到','行动量不够','目标需要重新命名']},
+    {type:'desire',input:'textarea',question:'真正欲望识别：如果这个目标没有掌声、没有认可、没有钱、没有外部证明，你还会继续做吗？为什么？',placeholder:'必须文字回答：这里判断目标是否是真正吸引子。'},
+    {type:'phase',input:'textarea',question:'相变阈值：出现什么信号时，你会知道自己不是在微调，而是真的该换轨/启动/公开显影了？',placeholder:'必须文字回答：写出你的启动/换轨信号。'}
+  ]
+}
 function renderQuestions(qs){document.getElementById('ai-questions').innerHTML=qs.map((q,i)=>`<div class="q-card"><div class="q-type">${String(i+1).padStart(2,'0')} · ${escapeHTML(q.type||'question')}</div><div class="q-text">${escapeHTML(q.question||q)}</div><textarea data-q-answer data-type="${escapeHTML(q.type||'question')}" data-question="${escapeHTML(q.question||q)}" placeholder="在这里回答 / Answer here..."></textarea></div>`).join('')}
 async function generateAIAuditReport(){const loading=document.getElementById('question-loading');loading.textContent='AI STRUCTURAL REPORT GENERATION IN PROGRESS…';loading.classList.add('show');const data=collect();try{let report;if(isMock()){report=simulateReport(data)}else{report=await callAI('generate_report',buildReportPrompt(data),data);if(!report||report.length<300)report=simulateReport(data)}setReport(report);renderStaticResult(data,report)}catch(e){const report=simulateReport(data);setReport(report);renderStaticResult(data,report)}finally{loading.classList.remove('show');loading.textContent='AI STRUCTURAL QUESTIONING IN PROGRESS…';document.getElementById('report').scrollIntoView({behavior:'smooth',block:'start'})}}
 function buildReportPrompt(d){return `${SYSTEM_PROMPT}\n\nTASK: Generate a precise, structured, customized RLPAM audit report. Do not give generic career advice. Every recommendation must bind to a variable, action, risk, and recheck condition. Output bilingual Chinese-English where possible. Must include these exact headings: Surface Question, Hidden Structural Question, Current Life-Path Stage, Variable Diagnosis, Main Misalignment, Strongest Variable, Weakest Variable, Best-Fit Path, Secondary Path, Unsuitable Path, Feasibility Score, Top 3 Risks, Next 3 Actions, 30-Day Rhythm Plan, 90-Day Phase Plan, Recheck Condition.\n\nDATA:\n${JSON.stringify(d,null,2)}`}
