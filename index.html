@@ -139,6 +139,26 @@
       <div class="field"><label>Main Goal <span>当前最重要目标</span></label><textarea id="f-goal" placeholder="如果这个目标移动了，一切都会改变的那个目标。"></textarea></div>
       <div class="field"><label>Biggest Confusion <span>最大困惑</span></label><textarea id="f-confusion" placeholder="你表面上在问什么？真正卡住的地方是什么？"></textarea></div>
 
+      <div class="slab">
+        <div class="tag" style="margin-bottom:12px">Quick Signal Sampler · 快速信号采样</div>
+        <div class="grid two">
+          <div class="field"><label>Goal Type <span>目标类型</span></label><select id="q-goal-type"><option value="">选择 / Select...</option><option>真正内在欲望</option><option>外部期待/家庭/同辈压力</option><option>现实压力下的选择</option><option>身份转型入口</option><option>混合状态，还没完全清楚</option></select></div>
+          <div class="field"><label>Main Stuck Point <span>主要卡点</span></label><select id="q-stuck-point"><option value="">选择 / Select...</option><option>身体/精力承重不足</option><option>资源不足：钱/时间/技能/人脉</option><option>行动断裂：知道但做不出</option><option>关系/家庭/环境消耗</option><option>场域不接：行业/平台/市场没回应</option><option>时间窗口没到</option><option>目标本身不够清晰</option></select></div>
+          <div class="field"><label>Temporal Window <span>时间窗口状态</span></label><select id="q-window-state"><option value="">选择 / Select...</option><option>正在打开</option><option>已经打开，需要行动</option><option>还没打开，需要准备</option><option>即将关闭，需要快速验证</option><option>不确定，需要更多场域信号</option></select></div>
+          <div class="field"><label>Validation Signal <span>验证信号</span></label><select id="q-validation-signal"><option value="">选择 / Select...</option><option>作品/项目是否产出</option><option>是否有外部反馈</option><option>是否有收入/资源变化</option><option>是否有合作/邀请</option><option>自己节律是否更稳定</option><option>身体是否承得住</option><option>方向是否更清晰</option></select></div>
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span class="slider-name">Overload Risk <span class="zhsmall">强行推进的过载风险</span></span><span class="slider-value" id="v-overload">5</span></div>
+          <input type="range" min="1" max="10" value="5" id="q-overload" oninput="document.getElementById('v-overload').textContent=this.value" />
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span class="slider-name">Launch Urgency <span class="zhsmall">启动紧迫度</span></span><span class="slider-value" id="v-urgency">5</span></div>
+          <input type="range" min="1" max="10" value="5" id="q-urgency" oninput="document.getElementById('v-urgency').textContent=this.value" />
+        </div>
+      </div>
+
+      <div class="slab"><div class="tag" style="margin-bottom:12px">Seven Variables · 七大变量评分</div><div id="sliders"></div></div>
+
       <details class="slab">
         <summary class="mono" style="cursor:pointer;color:var(--mint);letter-spacing:.08em">Advanced Context / 展开高级背景输入</summary>
         <div style="height:14px"></div>
@@ -148,7 +168,6 @@
         <div class="field"><label>Time Window <span>目标时间窗口</span></label><input id="f-window" type="text" placeholder="7天 / 30天 / 90天 / 1年 / 2026-2028"/></div>
       </details>
 
-      <div class="slab"><div class="tag" style="margin-bottom:12px">Seven Variables · 七大变量评分</div><div id="sliders"></div></div>
       <div class="btn-row"><button class="btn primary" onclick="generateQuestions()">Generate AI Questions →</button><button class="btn" onclick="runStaticAudit()">Generate Structural Reading</button><button class="btn" onclick="resetAll()">Reset</button></div>
       <div id="question-loading" class="loading">AI STRUCTURAL QUESTIONING IN PROGRESS…</div>
       <div id="ai-questions" class="ai-questions"></div>
@@ -232,7 +251,7 @@ function setLang(lang){document.body.classList.remove('lang-zh','lang-en');docum
 (function init(){const p=new URLSearchParams(location.search).get('view');if(p==='en'||p==='zh')setLang(p);renderSliders();starfield();})();
 function renderSliders(){const root=document.getElementById('sliders');root.innerHTML=sliderIds.map(k=>`<div class="slider-field"><div class="slider-head"><span class="slider-name">${k} · ${VARS[k].en}<span class="zhsmall">${VARS[k].zh}</span></span><span class="slider-value" id="v-${k}">5</span></div><input type="range" min="1" max="10" value="5" id="s-${k}" oninput="document.getElementById('v-${k}').textContent=this.value"/></div>`).join('')}
 function starfield(){const c=document.getElementById('starfield'),ctx=c.getContext('2d');let w,h,stars=[];function resize(){w=c.width=innerWidth;h=c.height=innerHeight;let n=Math.min(180,Math.floor(w*h/9000));stars=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.2,a:Math.random()*.6+.2,d:Math.random()*.012+.002,p:Math.random()*Math.PI*2}))}function tick(){ctx.clearRect(0,0,w,h);for(const s of stars){s.p+=s.d;let a=s.a*(.5+.5*Math.sin(s.p));ctx.fillStyle=s.p%(Math.PI*2)<Math.PI?`rgba(95,200,144,${a*.7})`:`rgba(236,90,110,${a*.6})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill()}requestAnimationFrame(tick)}addEventListener('resize',resize);resize();tick()}
-function collect(){const v=id=>(document.getElementById(id)?.value||'').trim();const scores={};sliderIds.forEach(k=>scores[k]=+document.getElementById('s-'+k).value);return {name:v('f-name'),age:v('f-age'),situation:v('f-situation'),goal:v('f-goal'),confusion:v('f-confusion'),desiredPath:v('f-path'),resources:v('f-resources'),constraints:v('f-constraints'),timeWindow:v('f-window'),scores,answers:collectAnswers()}}
+function collect(){const v=id=>(document.getElementById(id)?.value||'').trim();const scores={};sliderIds.forEach(k=>scores[k]=+document.getElementById('s-'+k).value);return {name:v('f-name'),age:v('f-age'),situation:v('f-situation'),goal:v('f-goal'),confusion:v('f-confusion'),desiredPath:v('f-path'),resources:v('f-resources'),constraints:v('f-constraints'),timeWindow:v('f-window'),quickSignals:{goalType:v('q-goal-type'),stuckPoint:v('q-stuck-point'),windowState:v('q-window-state'),validationSignal:v('q-validation-signal'),overloadRisk:v('q-overload'),launchUrgency:v('q-urgency')},scores,answers:collectAnswers()}}
 function collectAnswers(){return Array.from(document.querySelectorAll('[data-q-answer]')).map((el,i)=>({index:i+1,question:el.dataset.question,type:el.dataset.type,input:el.dataset.input,answer:String(el.value||'').trim()})).filter(x=>x.question||x.answer)}
 function scoreTotal(scores){return Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/70*100)}
 function stageFor(total){if(total<40)return {en:'Dislocated',zh:'路径位错期',cls:'warn',desc:'目标、节律、资源与场域暂时错位，不适合强行冲刺。先重建节律、资源与身体承重。'};if(total<60)return {en:'Forming',zh:'路径成形期',cls:'ok',desc:'方向开始出现，但目标与行动还未完全对齐。需要降低噪声，建立稳定推进机制。'};if(total<80)return {en:'Aligned',zh:'节律对齐期',cls:'ok',desc:'目标、行动、资源和场域已有较好对齐，可以进入系统推进。'};return {en:'Phase-Ready',zh:'相变临界期',cls:'hot',desc:'已经接近转轨或突破点，需要抓住时间窗口，集中资源推进。'}}
@@ -250,7 +269,16 @@ function simulateQuestions(d){
     {type:'priority',input:'select',question:'你最希望这个目标优先改变什么？',options:['自由度','收入/资源','身份感','影响力/被看见','创作/表达出口','稳定感','关系与生活结构']},
     ...sliderIds.map(k=>({type:'variable',input:'slider',question:`${VARS[k].zh} / ${VARS[k].en}：你对这个变量的真实把握程度是多少？`,min:1,max:10,left:'很弱/不确定',right:'很强/很确定',defaultValue:d.scores[k]})),
     {type:'risk',input:'select',question:`当前最低变量是「${VARS[weak].zh}」。如果它不改变，最可能出现的风险是？`,options:risksFor(weak)},
-    {type:'risk',input:'select',question:'你现在最危险的误判可能是什么？',ofunction renderQuestions(qs){
+    {type:'risk',input:'select',question:'你现在最危险的误判可能是什么？',options:['把消耗误认为努力','把幻想误认为目标','把等待误认为准备','把短期兴奋误认为长期节律','把外部认可误认为真实欲望','把资源不足误认为能力不足']},
+    {type:'risk',input:'slider',question:'如果现在强行推进，这条路径的过载风险有多高？',min:1,max:10,left:'很低',right:'很高'},
+    {type:'temporal',input:'select',question:'这个目标的时间窗口现在处于什么状态？',options:['正在打开','已经打开，需要行动','还没打开，需要准备','即将关闭，需要快速验证','不确定，需要更多场域信号']},
+    {type:'temporal',input:'select',question:'如果 30 天内必须验证一次，你会优先看什么指标？',options:['作品/项目是否产出','是否有外部反馈','是否有收入/资源变化','是否有合作/邀请','自己节律是否更稳定','身体是否承得住','方向是否更清晰']},
+    {type:'temporal',input:'select',question:'如果 90 天后没有变化，最可能说明什么？',options:['方向可能错了','方法可能错了','节律断了','资源不足','场域窗口没到','行动量不够','目标需要重新命名']},
+    {type:'desire',input:'textarea',question:'真正欲望识别：如果这个目标没有掌声、没有认可、没有钱、没有外部证明，你还会继续做吗？为什么？',placeholder:'必须文字回答：这里判断目标是否是真正吸引子。'},
+    {type:'phase',input:'textarea',question:'相变阈值：出现什么信号时，你会知道自己不是在微调，而是真的该换轨/启动/公开显影了？',placeholder:'必须文字回答：写出你的启动/换轨信号。'}
+  ]
+}
+function renderQuestions(qs){
   document.getElementById('ai-questions').innerHTML=qs.map((q,i)=>{
     const id=`q-${i}`; const input=q.input||inferInputType(q);
     let control='';
@@ -272,13 +300,6 @@ function inferInputType(q){
   if(t.includes('variable')||t.includes('risk')) return 'slider';
   return 'select';
 }
-async function generateAIAuditReport,'方向是否更清晰']},
-    {type:'temporal',input:'select',question:'如果 90 天后没有变化，最可能说明什么？',options:['方向可能错了','方法可能错了','节律断了','资源不足','场域窗口没到','行动量不够','目标需要重新命名']},
-    {type:'desire',input:'textarea',question:'真正欲望识别：如果这个目标没有掌声、没有认可、没有钱、没有外部证明，你还会继续做吗？为什么？',placeholder:'必须文字回答：这里判断目标是否是真正吸引子。'},
-    {type:'phase',input:'textarea',question:'相变阈值：出现什么信号时，你会知道自己不是在微调，而是真的该换轨/启动/公开显影了？',placeholder:'必须文字回答：写出你的启动/换轨信号。'}
-  ]
-}
-function renderQuestions(qs){document.getElementById('ai-questions').innerHTML=qs.map((q,i)=>`<div class="q-card"><div class="q-type">${String(i+1).padStart(2,'0')} · ${escapeHTML(q.type||'question')}</div><div class="q-text">${escapeHTML(q.question||q)}</div><textarea data-q-answer data-type="${escapeHTML(q.type||'question')}" data-question="${escapeHTML(q.question||q)}" placeholder="在这里回答 / Answer here..."></textarea></div>`).join('')}
 async function generateAIAuditReport(){const loading=document.getElementById('question-loading');loading.textContent='AI STRUCTURAL REPORT GENERATION IN PROGRESS…';loading.classList.add('show');const data=collect();try{let report;if(isMock()){report=simulateReport(data)}else{report=await callAI('generate_report',buildReportPrompt(data),data);if(!report||report.length<300)report=simulateReport(data)}setReport(report);renderStaticResult(data,report)}catch(e){const report=simulateReport(data);setReport(report);renderStaticResult(data,report)}finally{loading.classList.remove('show');loading.textContent='AI STRUCTURAL QUESTIONING IN PROGRESS…';document.getElementById('report').scrollIntoView({behavior:'smooth',block:'start'})}}
 function buildReportPrompt(d){return `${SYSTEM_PROMPT}\n\nTASK: Generate a precise, structured, customized RLPAM audit report. Do not give generic career advice. Every recommendation must bind to a variable, action, risk, and recheck condition. Output bilingual Chinese-English where possible. Must include these exact headings: Surface Question, Hidden Structural Question, Current Life-Path Stage, Variable Diagnosis, Main Misalignment, Strongest Variable, Weakest Variable, Best-Fit Path, Secondary Path, Unsuitable Path, Feasibility Score, Top 3 Risks, Next 3 Actions, 30-Day Rhythm Plan, 90-Day Phase Plan, Recheck Condition.\n\nDATA:\n${JSON.stringify(d,null,2)}`}
 function isMock(){return document.getElementById('mock-mode').checked||!document.getElementById('ai-endpoint').value.trim()}
@@ -325,7 +346,7 @@ function renderStaticResult(data){
   const def=document.getElementById('ai-explainer-default'); if(def) def.style.display='none';
 }
 function setReport(text){document.getElementById('report-box').textContent=text}
-function resetAll(){['f-name','f-age','f-situation','f-goal','f-confusion','f-path','f-resources','f-constraints','f-window','ai-endpoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='' });sliderIds.forEach(k=>{document.getElementById('s-'+k).value=5;document.getElementById('v-'+k).textContent=5});document.getElementById('ai-questions').innerHTML='';document.getElementById('answer-actions').style.display='none';document.getElementById('result-body').innerHTML='<div class="result-empty"><span class="glyph">◇</span><div>WAITING FOR STRUCTURAL INPUT</div><div class="zh zhfont" style="margin-top:6px;font-size:13px">填写左侧表单 → 生成 AI 追问 → 回答 → 生成报告</div></div>';setReport('【AI 节律人生路径审计报告 / AI Rhythm Life-Path Audit Report】\n\nSurface Question / 表层问题: —\nHidden Structural Question / 隐藏结构问题: —\nCurrent Life-Path Stage / 当前路径阶段: —\nLife-Path Fit Score / 路径适配度: —\nVariable Diagnosis / 变量诊断: —\nMain Misalignment / 主要错位: —\nStrongest Variable / 最强变量: —\nWeakest Variable / 最弱变量: —\nBest-Fit Path / 最适合路径: —\nSecondary Path / 辅助路径: —\nUnsuitable Path / 暂不适合路径: —\nFeasibility Score / 可行性评分: —\nTop 3 Risks / 三大风险: —\nNext 3 Actions / 下一步三个行动: —\n30-Day Rhythm Plan / 30 天节律计划: —\n90-Day Phase Plan / 90 天相变计划: —\nRecheck Condition / 复审条件: —\n\n— Run an audit above to generate the report —')}
+function resetAll(){['f-name','f-age','f-situation','f-goal','f-confusion','f-path','f-resources','f-constraints','f-window','ai-endpoint','q-goal-type','q-stuck-point','q-window-state','q-validation-signal'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='' });['q-overload','q-urgency'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=5});['v-overload','v-urgency'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=5});sliderIds.forEach(k=>{document.getElementById('s-'+k).value=5;document.getElementById('v-'+k).textContent=5});document.getElementById('ai-questions').innerHTML='';document.getElementById('answer-actions').style.display='none';document.getElementById('result-body').innerHTML='<div class="result-empty"><span class="glyph">◇</span><div>WAITING FOR STRUCTURAL INPUT</div><div class="zh zhfont" style="margin-top:6px;font-size:13px">填写左侧表单 → 生成 AI 追问 → 回答 → 生成报告</div></div>';setReport('【AI 节律人生路径审计报告 / AI Rhythm Life-Path Audit Report】\n\nSurface Question / 表层问题: —\nHidden Structural Question / 隐藏结构问题: —\nCurrent Life-Path Stage / 当前路径阶段: —\nLife-Path Fit Score / 路径适配度: —\nVariable Diagnosis / 变量诊断: —\nMain Misalignment / 主要错位: —\nStrongest Variable / 最强变量: —\nWeakest Variable / 最弱变量: —\nBest-Fit Path / 最适合路径: —\nSecondary Path / 辅助路径: —\nUnsuitable Path / 暂不适合路径: —\nFeasibility Score / 可行性评分: —\nTop 3 Risks / 三大风险: —\nNext 3 Actions / 下一步三个行动: —\n30-Day Rhythm Plan / 30 天节律计划: —\n90-Day Phase Plan / 90 天相变计划: —\nRecheck Condition / 复审条件: —\n\n— Run an audit above to generate the report —')}
 function copyReport(){const text=document.getElementById('report-box').textContent;navigator.clipboard.writeText(text).then(()=>{const fb=document.getElementById('copy-feedback');fb.classList.add('show');setTimeout(()=>fb.classList.remove('show'),1600)}).catch(()=>alert('Copy failed.'))}
 function downloadReport(){const text=document.getElementById('report-box').textContent;const blob=new Blob([text],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='AI-RLPAM-Report-'+new Date().toISOString().slice(0,10)+'.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
 function escapeHTML(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
